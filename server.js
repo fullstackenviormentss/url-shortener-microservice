@@ -6,7 +6,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const Url = require('./url')
 const randomStr = require('random-str')
-const Regex = require('regex')
 
 const app = express()
 
@@ -24,12 +23,12 @@ app.get("/", (request, response) => {
 })
 
 app.get('/new', async function(request, response){
-  let regex = new Regex(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/);
-  if(regex.test(request.query.url))
+  let regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  if(request.query.url.match(regex))
   {
     let url = await Url.findOne({original_url: request.query.url});
     if(url){
-      response.send(url);
+      response.send({original_url: url.original_url, short_url: url.short_url});
     }
     else{
       let shortUrl = await generateShortUrl();
@@ -40,7 +39,7 @@ app.get('/new', async function(request, response){
     }
   }
   else{
-    response.status(422).send({error: 'Invalid URL provided.'});
+    response.status(422).send({error: 'Invalid URL provided.', url: request.query.url});
   }
 });
 

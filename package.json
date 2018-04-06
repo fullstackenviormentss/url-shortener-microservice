@@ -11,8 +11,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "mongoose": "^5.0.13",
-    "random-str": "^0.0.7",
-    "regex": "^0.1.1"
+    "random-str": "^0.0.7"
   },
   "engines": {
     "node": "9.x"
